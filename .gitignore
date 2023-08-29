@@ -1,4 +1,4 @@
 *.env
 *.vscode
-scraper
+*-env
 *__pycache__
