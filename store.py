@@ -1,10 +1,8 @@
-import pathlib
 from dotenv import dotenv_values
 import postgrest
 from supabase import Client, create_client
 
-fn = pathlib.Path(__file__).parent / '.env'
-config = dotenv_values(fn)
+config = dotenv_values('.env')
 
 supabase: Client = create_client(config.get(
     "SUPABASE_URL"), config.get("SUPABASE_KEY"))

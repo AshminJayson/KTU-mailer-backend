@@ -2,7 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # from uuid import uuid4
 
-from mail_server import store
+import store
+import scraper
+import mail_server
 
 app = FastAPI()
 
@@ -36,4 +38,11 @@ async def delete_subscriber(email_id: str, uuid: str):
     return {'message': ret}
 
 
-# @app.get("/push_notifications")
+@app.get("/push_notifications")
+async def push_notifications(server_token):
+    # if server_token != :
+
+    notifications = scraper.get_notifications()
+    print(notifications)
+
+    return {'message': [notification[0] for notification in notifications]}

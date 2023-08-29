@@ -4,16 +4,18 @@ import requests
 import sys
 import os
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
 
-from mail_server import send_mail_to_all_users  # nopep8
+def get_notifications():
+    url = "https://ktu.edu.in/eu/core/announcements.htm"
+    page = requests.get(url)
 
-url = "https://ktu.edu.in/eu/core/announcements.htm"
-page = requests.get(url)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    notifications = soup.find("table", {"class": "ktu-news"}).find_all("tr")
+    res = []
+    for i in range(len(notifications)):
+        res.append(process_notification(notifications[i]))
 
-soup = BeautifulSoup(page.content, 'html.parser')
-notifications = soup.find("table", {"class": "ktu-news"}).find_all("tr")
+    return res
 
 
 def get_filename(content_disposition_header):
@@ -34,7 +36,7 @@ def process_notification(notification):
     notification_metadata = sections[0]
     notification_content = sections[1].find("li")
 
-    notification_date = notification_metadata.find("b").text
+    # notification_date = notification_metadata.find("b").text
 
     # Get notification attachment if present
     file_download_link = "https://ktu.edu.in" + \
@@ -55,17 +57,12 @@ def process_notification(notification):
 
     print(f"Processing notification : [{notification_title}]")
 
-    send_mail_to_all_users(body, subject,
-                           file_request.content, file_name)
+    return [subject, body, file_request.content, file_name]
 
     # To hold local copy of notification_file
     # if file_name != None:
     #     with open(file_name, 'wb') as file:
     #         file.write(file_request.content)
-
-
-for i in range(1):
-    process_notification(notifications[i])
 
 
 # print(notification_content)
