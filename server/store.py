@@ -1,14 +1,10 @@
-from dotenv import dotenv_values
 import postgrest
 from supabase import Client, create_client
 import os
 
 
-config = dotenv_values('server/.env')
-
-
-supabase: Client = create_client(config.get(
-    "SUPABASE_URL"), config.get("SUPABASE_KEY"))
+supabase: Client = create_client(os.environ(
+    "SUPABASE_URL"), os.environ("SUPABASE_KEY"))
 
 
 def get_subscribers():

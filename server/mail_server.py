@@ -5,7 +5,6 @@ from email.message import EmailMessage
 from email.mime.base import MIMEBase
 from email import encoders
 from dotenv import dotenv_values
-import sys
 import os
 
 
@@ -13,8 +12,8 @@ config = dotenv_values('server/.env')
 from store import get_subscribers  # nopep8
 
 
-SENDER_MAIL_ID, SENDER_PASSKEY, RECEIVER_MAIL_ID = config.get(
-    'SENDER_MAIL_ID'), config.get('SENDER_PASSKEY'), config.get("RECEIVER_MAIL_ID")
+SENDER_MAIL_ID, SENDER_PASSKEY = os.environ(
+    'SENDER_MAIL_ID'), os.environ('SENDER_PASSKEY')
 
 
 def send_through_smtp(email_message: EmailMessage, recipient_email_id: str):
@@ -31,10 +30,10 @@ def send_through_smtp(email_message: EmailMessage, recipient_email_id: str):
             print(err)
 
 
-def get_email_basic_body(body, subject):
+def get_email_basic_body(body, subject, recipient_email_id):
     email_message = EmailMessage()
     email_message['From'] = SENDER_MAIL_ID
-    email_message['To'] = RECEIVER_MAIL_ID
+    email_message['To'] = recipient_email_id
     email_message['Subject'] = subject
     email_message.set_content(body)
 
@@ -59,7 +58,7 @@ def get_attachment(file_data, file_name):
 def send_mail_to_all_users(body, subject, file_data, file_name):
     for recipient_email_id, recipient_uuid in get_subscribers():
         email_message = get_email_basic_body(
-            body=body, subject=subject)
+            body=body, subject=subject, recipient_email_id=recipient_email_id)
         if file_data:
             email_message.add_alternative(body, subtype='html')
             email_message.attach(get_attachment(
