@@ -1,0 +1,14 @@
+name: push_notifications_trigger
+
+on:
+    schedule:
+        - cron: "0 */3 * * *"
+
+jobs:
+    cron:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: fjogeleit/http-request-action@v1
+              with:
+                  url: "https://ktu-mailer-backend.onrender.com/?server_token=${{ secrets.SERVER_TOKEN }}"
