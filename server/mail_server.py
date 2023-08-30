@@ -8,10 +8,8 @@ from dotenv import dotenv_values
 import sys
 import os
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
 
-config = dotenv_values('.env')
+config = dotenv_values('server/.env')
 from store import get_subscribers  # nopep8
 
 

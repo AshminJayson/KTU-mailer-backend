@@ -1,8 +1,6 @@
 import re
 from bs4 import BeautifulSoup
 import requests
-import sys
-import os
 
 
 def get_notifications():

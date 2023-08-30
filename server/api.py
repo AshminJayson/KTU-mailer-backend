@@ -5,9 +5,8 @@ from fastapi import Form
 
 # from uuid import uuid4
 
-import store
-import scraper
-import mail_server
+from . import store
+from . import scraper
 
 app = FastAPI()
 

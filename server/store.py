@@ -1,8 +1,11 @@
 from dotenv import dotenv_values
 import postgrest
 from supabase import Client, create_client
+import os
 
-config = dotenv_values('.env')
+
+config = dotenv_values('server/.env')
+
 
 supabase: Client = create_client(config.get(
     "SUPABASE_URL"), config.get("SUPABASE_KEY"))
