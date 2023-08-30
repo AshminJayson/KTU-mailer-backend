@@ -3,8 +3,8 @@ from supabase import Client, create_client
 import os
 
 
-supabase: Client = create_client(os.environ(
-    "SUPABASE_URL"), os.environ("SUPABASE_KEY"))
+supabase: Client = create_client(os.environ.get(
+    "SUPABASE_URL"), os.environ.get("SUPABASE_KEY"))
 
 
 def get_subscribers():

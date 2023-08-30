@@ -4,16 +4,14 @@ import smtplib
 from email.message import EmailMessage
 from email.mime.base import MIMEBase
 from email import encoders
-from dotenv import dotenv_values
 import os
 
 
-config = dotenv_values('server/.env')
 from store import get_subscribers  # nopep8
 
 
-SENDER_MAIL_ID, SENDER_PASSKEY = os.environ(
-    'SENDER_MAIL_ID'), os.environ('SENDER_PASSKEY')
+SENDER_MAIL_ID, SENDER_PASSKEY = os.environ.get(
+    'SENDER_MAIL_ID'), os.environ.get('SENDER_PASSKEY')
 
 
 def send_through_smtp(email_message: EmailMessage, recipient_email_id: str):
