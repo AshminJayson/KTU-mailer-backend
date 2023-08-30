@@ -40,7 +40,7 @@ def delete_subscriber(email_id: str, _uuid: str):
             return "user does not exist"
 
         if response.data[0]['id'] != _uuid:
-            return "invalid uuid"
+            return "invalid user passkey"
 
         response = supabase.table('subscribers').delete().eq(
             'email_id', email_id).execute()

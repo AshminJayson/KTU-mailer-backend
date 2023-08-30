@@ -2,12 +2,14 @@ from typing import Annotated
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Form
+import os
 
 # from uuid import uuid4
 
 from . import store
 from . import scraper
 from . import mail_server
+
 
 app = FastAPI()
 
@@ -26,7 +28,7 @@ app.add_middleware(
 
 
 @app.get("/")
-async def welcome(request: Request):
+async def welcome():
     return {'message': 'go to /docs to use the api'}
 
 
@@ -38,14 +40,15 @@ async def add_subscriber(email_id: str = ''):
 
 
 @app.delete("/subscriber")
-async def delete_subscriber(email_id: str, uuid: str):
+async def delete_subscriber(email_id: str = '', uuid: str = ''):
     ret = store.delete_subscriber(email_id, uuid)
     return {'message': ret}
 
 
 @app.get("/push_notifications")
-async def push_notifications():
-    # if server_token != :
+async def push_notifications(server_token: str = ''):
+    if server_token != os.environ.get('SERVER_TOKEN'):
+        return {'message': 'unauthorized request to push notifications'}
 
     last_notification_title = store.get_last_notification_title()
     notifications = scraper.get_notifications_upto(last_notification_title)
