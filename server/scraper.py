@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import requests
 
 
-def get_notifications():
+def get_notifications_upto(notification_title):
     url = "https://ktu.edu.in/eu/core/announcements.htm"
     page = requests.get(url)
 
@@ -11,7 +11,10 @@ def get_notifications():
     notifications = soup.find("table", {"class": "ktu-news"}).find_all("tr")
     res = []
     for i in range(len(notifications)):
-        res.append(process_notification(notifications[i]))
+        notification_body = process_notification(notifications[i])
+        if notification_body['subject'] == notification_title:
+            break
+        res.append(notification_body)
 
     return res
 
@@ -37,10 +40,10 @@ def process_notification(notification):
     # notification_date = notification_metadata.find("b").text
 
     # Get notification attachment if present
-    file_download_link = "https://ktu.edu.in" + \
-        notification_content.find("a")['href']
-    file_request = requests.get(file_download_link)
-    file_name = get_filename(file_request.headers['Content-Disposition'])
+    file_download_link = ''
+    if notification_content.find("a"):
+        file_download_link = "https://ktu.edu.in" + \
+            notification_content.find("a")['href']
 
     # Notification title is the first <b> in the body
     notification_title = notification_content.find("b").text
@@ -55,7 +58,16 @@ def process_notification(notification):
 
     print(f"Processing notification : [{notification_title}]")
 
-    return [subject, body, file_request.content, file_name]
+    if file_download_link != '':
+        try:
+            file_request = requests.get(file_download_link)
+            file_name = get_filename(
+                file_request.headers['Content-Disposition'])
+            return {'subject': subject, 'body': body, 'file_data': file_request.content, 'file_name': file_name}
+        except:
+            return {'subject': subject, 'body': body, 'file_data': None, 'file_name': None}
+    else:
+        return {'subject': subject, 'body': body, 'file_data': None, 'file_name': None}
 
     # To hold local copy of notification_file
     # if file_name != None:

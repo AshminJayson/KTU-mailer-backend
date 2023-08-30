@@ -7,7 +7,7 @@ from email import encoders
 import os
 
 
-from store import get_subscribers  # nopep8
+from .store import get_subscribers  # nopep8
 
 
 SENDER_MAIL_ID, SENDER_PASSKEY = os.environ.get(
@@ -32,7 +32,7 @@ def get_email_basic_body(body, subject, recipient_email_id):
     email_message = EmailMessage()
     email_message['From'] = SENDER_MAIL_ID
     email_message['To'] = recipient_email_id
-    email_message['Subject'] = subject
+    email_message['Subject'] = subject[:60]
     email_message.set_content(body)
 
     return email_message

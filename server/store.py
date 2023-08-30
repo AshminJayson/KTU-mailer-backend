@@ -2,9 +2,11 @@ import postgrest
 from supabase import Client, create_client
 import os
 
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
-supabase: Client = create_client(os.environ.get(
-    "SUPABASE_URL"), os.environ.get("SUPABASE_KEY"))
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
 def get_subscribers():
@@ -45,5 +47,27 @@ def delete_subscriber(email_id: str, _uuid: str):
 
         return "user successfully deleted"
 
+    except postgrest.exceptions.APIError as err:
+        print(err.message)
+
+
+def add_notification_title(notification_title: str):
+    try:
+        response = supabase.table('notifications').insert(
+            {'notification_title': notification_title}).execute()
+
+        return "notification title added successfully"
+    except postgrest.exceptions.APIError as err:
+        print(err.message)
+
+
+def get_last_notification_title():
+    try:
+        response = supabase.table('notifications').select(
+            "*").order("created_at", desc=True).limit(1).execute()
+
+        if len(response.data) == 0:
+            return ''
+        return response.data[0].get('notification_title', '')
     except postgrest.exceptions.APIError as err:
         print(err.message)
