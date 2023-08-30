@@ -1,6 +1,7 @@
 name: push_notifications_trigger
 
 on:
+    workflow_dispatch:
     schedule:
         - cron: "0 */3 * * *"
 
