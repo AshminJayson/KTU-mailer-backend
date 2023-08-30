@@ -14,10 +14,10 @@ from . import mail_server
 app = FastAPI()
 
 origins = [
-    "http://localhost",
-    "http://localhost:3000",
-    "https://ktu-mailer-frontend.vercel.app"
+    "*"
 ]
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
