@@ -1,5 +1,8 @@
-from fastapi import FastAPI
+from typing import Annotated
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Form
+
 # from uuid import uuid4
 
 import store
@@ -22,17 +25,18 @@ app.add_middleware(
 
 
 @app.get("/")
-async def welcome():
-    return {'message': 'Go to /docs to test the api'}
+async def welcome(request: Request):
+    return {'message': 'go to /docs to use the api'}
 
 
-@app.get("/add_subscriber")
-async def add_subscriber(email_id: str):
+@app.post("/subscriber/")
+async def add_subscriber(email_id: str = ''):
     ret = store.add_subscriber(email_id)
+    print(ret)
     return {'message': ret}
 
 
-@app.get("/delete_subscriber")
+@app.delete("/subscriber")
 async def delete_subscriber(email_id: str, uuid: str):
     ret = store.delete_subscriber(email_id, uuid)
     return {'message': ret}
