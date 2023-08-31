@@ -14,3 +14,4 @@ jobs:
               with:
                   url: "https://ktu-mailer-backend.onrender.com/push_notifications?server_token=${{ secrets.SERVER_TOKEN }}"
                   method: "GET"
+                  timeout: 120000
