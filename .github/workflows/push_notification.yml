@@ -10,8 +10,13 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: fjogeleit/http-request-action@v1
+            - name: Make push_notifications Request
+              id: push_notifications_request
+              uses: fjogeleit/http-request-action@v1
               with:
                   url: "https://ktu-mailer-backend.onrender.com/push_notifications?server_token=${{ secrets.SERVER_TOKEN }}"
                   method: "GET"
                   timeout: 120000
+            - name: Show Response
+              run: |
+                  echo ${{ steps.push_notifications_request.outputs.response }}
