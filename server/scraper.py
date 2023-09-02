@@ -4,17 +4,23 @@ import requests
 
 
 def get_notifications_upto(notification_title):
+    print(notification_title)
     url = "https://ktu.edu.in/eu/core/announcements.htm"
     page = requests.get(url)
 
     soup = BeautifulSoup(page.content, 'html.parser')
     notifications = soup.find("table", {"class": "ktu-news"}).find_all("tr")
     res = []
+    soft_limit = 10
     for i in range(len(notifications)):
         notification_body = process_notification(notifications[i])
         if notification_body['subject'] == notification_title:
             break
         res.append(notification_body)
+
+        soft_limit -= 1
+        if soft_limit == 0:
+            break
 
     return res
 
